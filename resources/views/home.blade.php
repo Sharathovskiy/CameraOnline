@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container text-center">
+<div class="container">
 
     <div class="row ">
         <h1>Take a picture of yourself!</h1>
@@ -13,10 +13,17 @@
         <button id="snap" onClick="snap()">Snap photo</button>
     </div>
     
+    <div class="row">
+        <table>
+            <tr id='photos'>
+            </tr>
+        </table>
+    </div>
+    
 </div>
-
 @endsection
 
 @section('scripts')
 <script src="{{asset("js/webcam.js")}}"></script>
+<script src="{{asset("js/photoTaker.js")}}"></script>
 @endsection
