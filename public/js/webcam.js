@@ -1,5 +1,6 @@
 // Grab elements, create settings, etc.
 var video = document.getElementById('video');
+var canvas = document.getElementById('canvas');
 // Get access to the camera!
 if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
     // Not adding `{ audio: true }` since we only want video now
@@ -32,6 +33,6 @@ var context = canvas.getContext('2d');
 var video = document.getElementById('video');
 
 function snap(){
-    context.drawImage(video, 0, 0, 400, 300);
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
 }
 
