@@ -2,7 +2,6 @@
 namespace Tests;
 
 use Tests\TestCase;
-use App\Utils\File;
 
 class FileTest extends TestCase{
     
@@ -12,7 +11,7 @@ class FileTest extends TestCase{
     }
     
     public function testCreatingFile(){
-        \App\Utils\File::mkDirIfNotExists('testDir');
+        \App\lib\utils\File::mkDirIfNotExists('testDir');
         $this->assertTrue(file_exists('testDir'));
     } 
     

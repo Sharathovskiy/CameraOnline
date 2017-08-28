@@ -1,4 +1,3 @@
-
 var video = document.getElementById('video');
 
 // Get access to the camera!
