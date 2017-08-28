@@ -9,19 +9,13 @@
         <canvas id="canvas" width="400" height="300"></canvas>
     </div>
 
-        <form method="post" action='{{route('photoTaken')}}' name="form1" enctype="multipart/form-data">
+        <form name="dataURLContainer">
             {{ csrf_field() }}
             <input name="hidden_data" id="hidden_data" type="hidden">
         </form>
 
-    <button onclick="snap(); sendPhoto();">Take photo!</button>
-
-    <!--    <div class="row">
-            <table>
-                <tr id='photos'></tr>
-            </table>
-        </div>-->
-
+    <button onclick="snap(); sendPhoto();" class="btn btn-success">Take photo!</button>
+    <a href="{{route('showPhotos')}}" class="btn btn-primary">Show photos from DB</a>
 </div>
 @endsection
 
@@ -29,6 +23,6 @@
 <script src="{{asset("js/webcam.js")}}"></script>
 <script src="{{asset("js/photoTaker.js")}}"></script>
 <script>
-    var photoTakenRoute = "{{route('photoTaken')}}";
+    var uploadPhotoRoute = "{{route('uploadPhoto')}}";
 </script>
 @endsection
