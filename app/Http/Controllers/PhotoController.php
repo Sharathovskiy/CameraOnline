@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Photo;
+use App\lib\PaginationHelper;
 use DB;
 
-class PhotoController {
+class PhotoController extends Controller {
 
     function uploadPhoto() {
         $dataURL = $_POST['hidden_data'];
@@ -44,11 +45,7 @@ class PhotoController {
     }
 
     function showPhotosFromDb() {
-        $photos = Photo::all();
-
-        foreach ($photos as $photo) {
-            echo '<image width="400" height="300" src="data:image/png;base64,' . $photo->image . '" /> ';
-        }
+        $paginationHelper = new PaginationHelper(5);
+        return view('photos', ['paginationHelper' => $paginationHelper]);
     }
-
 }
