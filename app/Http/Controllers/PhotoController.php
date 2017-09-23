@@ -45,7 +45,7 @@ class PhotoController extends Controller {
     }
 
     function showPhotosFromDb() {
-        $paginationHelper = new PaginationHelper(5);
+        $paginationHelper = new PaginationHelper(5, PHOTO::TABLE_NAME);
         return view('photos', ['paginationHelper' => $paginationHelper]);
     }
 }

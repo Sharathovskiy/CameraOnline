@@ -16,8 +16,8 @@ class PaginationHelper {
             $itemsPerPage,
             $currentPage;
 
-    public function __construct($itemsPerPage) {
-        $this->photos = DB::table('users_photos');
+    public function __construct($itemsPerPage, $tableName) {
+        $this->photos = DB::table($tableName);
         $this->itemsPerPage = $itemsPerPage;
         $this->totalPages = ceil($this->photos->count() / $this->itemsPerPage);
         $this->currentPage = 1;
