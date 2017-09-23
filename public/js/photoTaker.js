@@ -1,3 +1,10 @@
+$(document).keyup(function(e){
+    if(e.keyCode === 13 || e.keyCode === 32){
+        snap();
+        sendPhoto();
+    }
+});
+
 var video = document.getElementById('video');
 var canvas = document.getElementById('canvas');
 var context = canvas.getContext('2d');
