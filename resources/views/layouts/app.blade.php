@@ -30,7 +30,6 @@
          </div>
      </section>
 
-
      <section id="content">
          <div class="container">
             @yield('content')
@@ -44,8 +43,6 @@
             <p> © 2017 Mateusz Szarata, mateusz.szarata@op.pl</p>
         </div>
      </section>
-
-
             
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
