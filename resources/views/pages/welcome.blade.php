@@ -9,3 +9,11 @@
     
 </div>
 @endsection
+
+@section('footer')
+<section id="footer">
+   <div class="container-fluid text-center">
+       <p> © 2017 Mateusz Szarata, mateusz.szarata@op.pl</p>
+   </div>
+</section>
+@endsection

@@ -14,7 +14,7 @@ $('#snap').click(function(){
     function changeOpacity(){
         afterPicture.style.opacity = opacity;
         
-        if(opacity <= 1){
+        if(opacity < 1){
             setTimeout(changeOpacity, 15);
         }
         opacity += 0.05;
@@ -30,7 +30,6 @@ var context = canvas.getContext('2d');
 
 var beforePicture = document.getElementById('before-picture');
 var afterPicture = document.getElementById('after-picture');
-var footer = document.getElementById('footer');
 
 function snap() {
     displayPhoto();
@@ -44,7 +43,6 @@ function snap() {
 function displayPhoto(){
     beforePicture.style.display = 'none';
     afterPicture.style.display = 'block';
-    footer.style.display = 'none';
     video.pause();
     isPhotoDisplayed = true;
 }
@@ -55,7 +53,6 @@ function displayPhoto(){
 function hidePhoto(){
     afterPicture.style.display = 'none';
     beforePicture.style.display = 'block';
-    footer.style.display = 'block';
     video.play();
     isPhotoDisplayed = false;
 }

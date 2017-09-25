@@ -17,3 +17,5 @@ Route::prefix('photo')->group(function () {
     
     Route::delete('/{photoId}', 'PhotoController@deletePhoto')->name('deletePhoto');
 });
+Auth::routes();
+
