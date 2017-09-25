@@ -17,7 +17,7 @@
     </div>
     
     <div class="row text-center">
-        <button onclick="snap();" class="btn btn-success">Take photo!</button>
+        <button id="snap" onclick="snap();" class="btn btn-success">Take photo!</button>
         <a href="{{route('showPhotos')}}" class="btn btn-primary">Show photos from DB</a>
     </div>
     

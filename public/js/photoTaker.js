@@ -4,11 +4,22 @@ $(document).keyup(function(e){
     }
 });
 
-$('#send, #cancel').click(function(){
-   if(this.id === 'send'){
-       sendPhoto();
-   }
+$('#cancel').click(function(){
    hidePhoto();
+});
+
+$('#snap').click(function(){
+    var opacity = 0;
+    
+    function changeOpacity(){
+        afterPicture.style.opacity = opacity;
+        opacity += 0.05;
+        
+        if(opacity < 0.95){
+            setTimeout(changeOpacity, 15);
+        }
+    }
+    changeOpacity();
 });
 
 var isPhotoDisplayed = false;
@@ -49,7 +60,7 @@ function hidePhoto(){
     isPhotoDisplayed = false;
 }
 
-function setImgValue() {
+function setImgValue(){
     var dataURL = canvas.toDataURL("image/png");
     document.getElementById('hidden_data').value = dataURL;
 }
