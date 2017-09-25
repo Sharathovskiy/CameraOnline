@@ -51,7 +51,4 @@
 @section('scripts')
 <script src="{{asset("js/webcam.js")}}"></script>
 <script src="{{asset("js/photoTaker.js")}}"></script>
-<script>
-    var uploadPhotoRoute = "{{route('uploadPhoto')}}";
-</script>
 @endsection

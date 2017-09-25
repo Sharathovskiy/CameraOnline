@@ -13,7 +13,11 @@ class PhotoController extends Controller {
     public function uploadPhoto() {
         $dataURL = $_POST['hidden_data'];
         $preparedDataURL = $this->getPreparedDataURL($dataURL);
-        $this->uploadPhotoToDb($preparedDataURL);
+        
+        if(!$this->uploadPhotoToDb($preparedDataURL)){
+            throw new \Illuminate\Database\QueryException('The photo could not be saved.');
+            
+        };
         return redirect()->back();
     }
 
@@ -27,24 +31,13 @@ class PhotoController extends Controller {
         $dataURL = str_replace(' ', '+', $dataURL);
         return $dataURL;
     }
-
-    /**
-     * Decodes and uploads photo to servers directory
-     * @param type $preparedDataURL
-     */
-    private function uploadPhotoToServer($preparedDataURL) {
-        $upload_dir = "uploadedPhotos/";
-        \App\lib\utils\File::mkDirIfNotExists($upload_dir);
-        $file = $upload_dir . time() . ".png";
-        $data = base64_decode($preparedDataURL);
-        file_put_contents($file, $data);
-    }
-
+    
     private function uploadPhotoToDb($dataURL) {
         $photo = new Photo();
         $photo->name = time() . '.png';
         $photo->image = $dataURL;
-        $photo->save();
+        $isUploaded = $photo->save();
+        return $isUploaded;
     }
 
     public function showPhotosFromDb() {
@@ -53,7 +46,7 @@ class PhotoController extends Controller {
     }
     
     public function showPhoto($photoId){
-        $photo = DB::table(Photo::TABLE_NAME)->where('id', '=', $photoId)->first();
+        $photo = Photo::findOrFail($photoId);
         return view('pages.photo', ['photo' => $photo]);
     }
     
@@ -61,5 +54,17 @@ class PhotoController extends Controller {
         $photo = Photo::findOrFail($photoId);
         $photo->delete();
         return redirect()->back();
+    }
+    
+    /**
+     * Decodes and uploads photo to servers directory
+     * @param type $preparedDataURL
+     */
+    private function uploadPhotoToTheServer($preparedDataURL) {
+        $upload_dir = "uploadedPhotos/";
+        \App\lib\utils\File::mkDirIfNotExists($upload_dir);
+        $file = $upload_dir . time() . ".png";
+        $data = base64_decode($preparedDataURL);
+        file_put_contents($file, $data);
     }
 }
