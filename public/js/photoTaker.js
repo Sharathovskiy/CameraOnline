@@ -13,11 +13,11 @@ $('#snap').click(function(){
     
     function changeOpacity(){
         afterPicture.style.opacity = opacity;
-        opacity += 0.05;
         
-        if(opacity < 0.95){
+        if(opacity <= 1){
             setTimeout(changeOpacity, 15);
         }
+        opacity += 0.05;
     }
     changeOpacity();
 });

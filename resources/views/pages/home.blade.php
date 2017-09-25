@@ -16,7 +16,7 @@
         <video id="video" width="60%" height="60%" autoplay></video>
     </div>
     
-    <div class="row text-center">
+    <div class="row text-center" style="margin-top: 10px">
         <button id="snap" onclick="snap();" class="btn btn-success">Take photo!</button>
         <a href="{{route('showPhotos')}}" class="btn btn-primary">Show photos from DB</a>
     </div>
