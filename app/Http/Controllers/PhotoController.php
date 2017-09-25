@@ -55,4 +55,10 @@ class PhotoController extends Controller {
         $photo = DB::table(Photo::TABLE_NAME)->where('id', '=', $photoId)->first();
         return view('pages.photo', ['photo' => $photo]);
     }
+    
+    function deletePhoto($photoId){
+        $photo = Photo::findOrFail($photoId);
+        $photo->delete();
+        return redirect()->route('showPhotos');
+    }
 }

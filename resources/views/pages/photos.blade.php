@@ -15,7 +15,14 @@
                     <a href="{{route('showPhoto', $photo->id)}}" target="new">
                         <image width="200" height="150" src="<?= $imageSrc ?>" />
                     </a>
-                   <a href="<?= $imageSrc ?>" class="btn btn-primary" download="<?= $photo->name ?>" style="margin-top: 10px">Download</a>
+                    <div style="margin-top: 10px">
+                        <a href="<?= $imageSrc ?>" class="btn btn-primary" download="<?= $photo->name ?>">Download</a>
+                        <form method="POST" action="{{route('deletePhoto', ['photoId' => $photo->id])}}" style="display:inline-block">
+                        {{ csrf_field() }}
+                            <input type="submit" class="btn btn-danger remove-btn" value="X"></input>
+                            <input name="_method" type="hidden" value="DELETE">
+                        </form>
+                    </div>
                 </td>
                 @endforeach
             </tr>
