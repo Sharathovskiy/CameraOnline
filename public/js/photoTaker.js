@@ -1,7 +1,6 @@
 $(document).keyup(function(e){
-    if(e.keyCode === 13 || e.keyCode === 32){
+    if(e.keyCode === 13 || e.keyCode === 32 && !isPhotoDisplayed){
         snap();
-        sendPhoto();
     }
 });
 
@@ -9,10 +8,11 @@ $('#send, #cancel').click(function(){
    if(this.id === 'send'){
        sendPhoto();
    }
-    afterPicture.style.display = 'none';
-    beforePicture.style.display = 'block';
-    footer.style.display = 'block';
+   hidePhoto();
+   isPhotoDisplayed = false;
+
 });
+var isPhotoDisplayed = false;
 
 var video = document.getElementById('video');
 var canvas = document.getElementById('canvas');
@@ -23,12 +23,23 @@ var afterPicture = document.getElementById('after-picture');
 var footer = document.getElementById('footer');
 
 function snap() {
+    displayPhoto();
+
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    canvas.style.display = "block";
+    isPhotoDisplayed = true;
+}
+
+function displayPhoto(){
     beforePicture.style.display = 'none';
     afterPicture.style.display = 'block';
     footer.style.display = 'none';
-   
-    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-    canvas.style.display = "block";
+}
+
+function hidePhoto(){
+    afterPicture.style.display = 'none';
+    beforePicture.style.display = 'block';
+    footer.style.display = 'block';
 }
 
 function sendPhoto() {
