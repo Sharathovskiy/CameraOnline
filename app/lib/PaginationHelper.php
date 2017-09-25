@@ -4,35 +4,39 @@ namespace App\lib;
 
 use DB;
 
-/**
- * Description of PaginationHelper
- *
- * @author Szary
- */
 class PaginationHelper {
 
-    private $photos,
-            $totalPages,
-            $itemsPerPage,
-            $currentPage;
+    private $table,
+            $totalRows,
+            $itemsPerTableRow,
+            $currentPage,
+            $rowsPerPage;
 
-    public function __construct($itemsPerPage, $tableName) {
-        $this->photos = DB::table($tableName);
-        $this->itemsPerPage = $itemsPerPage;
-        $this->totalPages = ceil($this->photos->count() / $this->itemsPerPage);
-        $this->currentPage = 1;
+    public function __construct($rowsPerPage, $itemsPerTableRow, $pageNumber, $tableName) {
+        $this->table = DB::table($tableName);
+        $this->itemsPerTableRow = $itemsPerTableRow;
+        $this->totalRows = ceil($this->table->count() / $this->itemsPerTableRow);
+        $this->currentPage = $pageNumber;
+        $this->rowsPerPage = $rowsPerPage;
     }
-
-    public function getNextPage() {
-        if($this->currentPage > $this->totalPages){
-            return;
+    
+    /**
+     * Gets items for page and returns a chunked array, 
+     * so it can be easily displayed in table rows.
+     * 
+     * @return chunked collection of items that will be displayed.
+     * @throws \Exception
+     */
+    public function getNextPage(){
+        if($this->currentPage > $this->getTotalPages()){
+            throw new \Exception("There is no such page!");
         }
-        $chunk = $this->photos->forPage($this->currentPage, $this->itemsPerPage);
+        $page = $this->table->forPage($this->currentPage, $this->rowsPerPage * $this->itemsPerTableRow);
         $this->currentPage++;
-        return $chunk->get();
+        return $page->get()->chunk($this->itemsPerTableRow);
     }
 
     public function getTotalPages() {
-        return $this->totalPages;
+        return ceil($this->totalRows / $this->rowsPerPage);
     }
 }

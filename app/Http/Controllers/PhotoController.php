@@ -9,7 +9,7 @@ use DB;
 class PhotoController extends Controller {
 
     const IMAGE_PREFFIX = 'data:image/png;base64,';
-    
+
     public function uploadPhoto() {
         $dataURL = $_POST['hidden_data'];
         $preparedDataURL = $this->getPreparedDataURL($dataURL);
@@ -41,8 +41,12 @@ class PhotoController extends Controller {
     }
 
     public function showPhotosFromDb() {
-        $paginationHelper = new PaginationHelper(5, PHOTO::TABLE_NAME);
-        return view('pages.photos', ['paginationHelper' => $paginationHelper]);
+        $page = 1;
+        if(array_key_exists('page', $_GET)){
+            $page = $_GET['page'];
+        };
+        $paginator =  new PaginationHelper(2, 5, $page, Photo::TABLE_NAME);
+        return view('pages.photos', ['paginator' => $paginator, 'page' => $page]);
     }
     
     public function showPhoto($photoId){
