@@ -25,7 +25,8 @@ class PaginationHelper {
      * so it can be easily displayed in table rows.
      * 
      * @return chunked collection of items that will be displayed.
-     * @throws \Exception
+     * @throws \Exception when trying to access page which is > than
+     * total pages.
      */
     public function getNextPage(){
         if($this->currentPage > $this->getTotalPages()){
@@ -37,6 +38,7 @@ class PaginationHelper {
     }
 
     public function getTotalPages() {
-        return ceil($this->totalRows / $this->rowsPerPage);
+        $totalPages = ceil($this->totalRows / $this->rowsPerPage);
+        return empty($totalPages) ? 1 : $totalPages ;
     }
 }
