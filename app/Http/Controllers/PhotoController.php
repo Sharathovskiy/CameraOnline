@@ -10,10 +10,11 @@ class PhotoController extends Controller {
 
     const IMAGE_PREFFIX = 'data:image/png;base64,';
     
-    function uploadPhoto() {
+    public function uploadPhoto() {
         $dataURL = $_POST['hidden_data'];
         $preparedDataURL = $this->getPreparedDataURL($dataURL);
         $this->uploadPhotoToDb($preparedDataURL);
+        return redirect()->back();
     }
 
     /**
@@ -31,7 +32,7 @@ class PhotoController extends Controller {
      * Decodes and uploads photo to servers directory
      * @param type $preparedDataURL
      */
-    function uploadPhotoToServer($preparedDataURL) {
+    private function uploadPhotoToServer($preparedDataURL) {
         $upload_dir = "uploadedPhotos/";
         \App\lib\utils\File::mkDirIfNotExists($upload_dir);
         $file = $upload_dir . time() . ".png";
@@ -39,26 +40,26 @@ class PhotoController extends Controller {
         file_put_contents($file, $data);
     }
 
-    function uploadPhotoToDb($dataURL) {
+    private function uploadPhotoToDb($dataURL) {
         $photo = new Photo();
         $photo->name = time() . '.png';
         $photo->image = $dataURL;
         $photo->save();
     }
 
-    function showPhotosFromDb() {
+    public function showPhotosFromDb() {
         $paginationHelper = new PaginationHelper(5, PHOTO::TABLE_NAME);
         return view('pages.photos', ['paginationHelper' => $paginationHelper]);
     }
     
-    function showPhoto($photoId){
+    public function showPhoto($photoId){
         $photo = DB::table(Photo::TABLE_NAME)->where('id', '=', $photoId)->first();
         return view('pages.photo', ['photo' => $photo]);
     }
     
-    function deletePhoto($photoId){
+    public function deletePhoto($photoId){
         $photo = Photo::findOrFail($photoId);
         $photo->delete();
-        return redirect()->route('showPhotos');
+        return redirect()->back();
     }
 }

@@ -9,9 +9,8 @@ $('#send, #cancel').click(function(){
        sendPhoto();
    }
    hidePhoto();
-   isPhotoDisplayed = false;
-
 });
+
 var isPhotoDisplayed = false;
 
 var video = document.getElementById('video');
@@ -24,31 +23,33 @@ var footer = document.getElementById('footer');
 
 function snap() {
     displayPhoto();
-
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
-    canvas.style.display = "block";
-    isPhotoDisplayed = true;
+    setImgValue();
 }
 
+/**
+ * Stops the video and shows canvas with photo.
+ */
 function displayPhoto(){
     beforePicture.style.display = 'none';
     afterPicture.style.display = 'block';
     footer.style.display = 'none';
+    video.pause();
+    isPhotoDisplayed = true;
 }
 
+/**
+ * Plays the video and hides canvas with photo
+ */
 function hidePhoto(){
     afterPicture.style.display = 'none';
     beforePicture.style.display = 'block';
     footer.style.display = 'block';
+    video.play();
+    isPhotoDisplayed = false;
 }
 
-function sendPhoto() {
+function setImgValue() {
     var dataURL = canvas.toDataURL("image/png");
     document.getElementById('hidden_data').value = dataURL;
-
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', uploadPhotoRoute, true);
-    
-    var fd = new FormData(document.forms["dataURLContainer"]);
-    xhr.send(fd);
 }

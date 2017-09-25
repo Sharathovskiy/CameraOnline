@@ -15,11 +15,6 @@
     <div id="image-wrapper" class="row">
         <video id="video" width="60%" height="60%" autoplay></video>
     </div>
-
-    <form name="dataURLContainer">
-    {{ csrf_field() }}
-        <input name="hidden_data" id="hidden_data" type="hidden">
-    </form>
     
     <div class="row text-center">
         <button onclick="snap();" class="btn btn-success">Take photo!</button>
@@ -28,18 +23,24 @@
     
 </div>
 
-<div id="after-picture">
+<div id="after-picture" class="row text-center">
     
-    <div class="row text-center">
+    <div >
         <h1>Your beautiful picture!</h1>
     </div>
 
     <div id="canvas-wrapper" class="row">
         <canvas id="canvas" width="800" height="600"></canvas>
     </div>
-
-    <div class="row text-center">
-        <button id="send" class="btn btn-success">Send photo!</button>
+    
+    <div class="row">
+       
+        <form method="POST" action="{{route('uploadPhoto')}}" style="display:inline-block">
+        {{ csrf_field() }}
+            <input name="hidden_data" id="hidden_data" type="hidden">
+            <input type="submit" class="btn btn-success" value="Send photo!"></input>
+        </form>
+        
         <button id="cancel" class="btn btn-danger">Nope nope nope!</button>
     </div>
     
