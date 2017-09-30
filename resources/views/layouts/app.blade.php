@@ -24,7 +24,7 @@
                     <div class="collapse navbar-collapse" id="app-navbar-collapse">
                         <ul class="nav navbar-nav">
                           <li class="{{ (Route::is('home') ? 'active' : '') }}"><a href="{{route('home')}}">Home</a></li>
-                          <li class="{{ (Route::is('showPhotos') ? 'active' : '') }}"><a href="{{route('showPhotos')}}">Show photos</a></li>
+                          <li class="{{ (Route::is('showPhotos') ? 'active' : '') }}"><a href="{{route('showPhotos')}}">Show your photos</a></li>
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
                             <!-- Authentication Links -->

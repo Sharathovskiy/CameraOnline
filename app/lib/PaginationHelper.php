@@ -6,22 +6,22 @@ use DB;
 
 class PaginationHelper {
 
-    private $table,
+    private $items,
             $totalRows,
-            $itemsPerTableRow,
+            $itemsPerRow,
             $currentPage,
             $rowsPerPage;
 
-    public function __construct($rowsPerPage, $itemsPerTableRow, $pageNumber, $tableName) {
-        $this->table = DB::table($tableName);
-        $this->itemsPerTableRow = $itemsPerTableRow;
-        $this->totalRows = ceil($this->table->count() / $this->itemsPerTableRow);
+    public function __construct($rowsPerPage, $itemsPerRow, $pageNumber, $items) {
+        $this->items = $items;
+        $this->itemsPerRow = $itemsPerRow;
+        $this->totalRows = ceil($this->items->count() / $this->itemsPerRow);
         $this->currentPage = $pageNumber;
         $this->rowsPerPage = $rowsPerPage;
     }
     
     /**
-     * Gets items for page and returns a chunked array, 
+     * Gets items for page and returns a chunk array, 
      * so it can be easily displayed in table rows.
      * 
      * @return chunked collection of items that will be displayed.
@@ -32,9 +32,11 @@ class PaginationHelper {
         if($this->currentPage > $this->getTotalPages()){
             throw new \Exception("There is no such page!");
         }
-        $page = $this->table->forPage($this->currentPage, $this->rowsPerPage * $this->itemsPerTableRow);
+        $elementsPerPage = $this->rowsPerPage * $this->itemsPerRow;
+        $page = $this->items->forPage($this->currentPage, $elementsPerPage);
+        
         $this->currentPage++;
-        return $page->get()->chunk($this->itemsPerTableRow);
+        return $page->chunk($this->itemsPerRow);
     }
 
     public function getTotalPages() {

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use App\Photo;
+use App\User;
 use App\lib\PaginationHelper;
 use DB;
 
@@ -23,29 +25,42 @@ class PhotoController extends Controller {
 
     /**
      * Removes specific characters from data URL so it can be decoded and saved as a normal file.
-     * @param type $dataURL - data URL from 
+     * @param type $dataUrl - data URL from 
      * @return type $dataURL
      */
-    private function getPreparedDataURL($dataURL) {
-        $dataURL = str_replace(self::IMAGE_PREFFIX, '', $dataURL);
-        $dataURL = str_replace(' ', '+', $dataURL);
-        return $dataURL;
+    private function getPreparedDataURL($dataUrl) {
+        $dataUrl = str_replace(self::IMAGE_PREFFIX, '', $dataUrl);
+        $dataUrl = str_replace(' ', '+', $dataUrl);
+        return $dataUrl;
     }
     
-    private function uploadPhotoToDb($dataURL) {
+    private function uploadPhotoToDb($dataUrl) {
+        if(!Auth::check()){
+            throw new \Exception("You need to login in order to add photos!");
+        }
         $photo = new Photo();
         $photo->name = time() . '.png';
-        $photo->image = $dataURL;
-        $isUploaded = $photo->save();
+        $photo->image = $dataUrl;
+        
+        $user = Auth::user();
+        
+        $isUploaded = $user->photos()->save($photo);
+        
         return $isUploaded;
     }
 
-    public function showPhotosFromDb() {
+    public function showAuthUserPhotos() {
         $page = 1;
         if(array_key_exists('page', $_GET)){
             $page = $_GET['page'];
         };
-        $paginator =  new PaginationHelper(2, 5, $page, Photo::TABLE_NAME);
+
+        $photos = Photo::where('user_id', '=', Auth::id())->get();
+        
+        $rowsPerPage = 2;
+        $itemsPerRow = 5;
+        $paginator =  new PaginationHelper($rowsPerPage, $itemsPerRow, $page, $photos);
+        
         return view('pages.photos', ['paginator' => $paginator, 'page' => $page]);
     }
     

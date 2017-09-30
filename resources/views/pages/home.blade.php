@@ -30,7 +30,7 @@
     </div>
 
     <div id="canvas-wrapper" class="row">
-        <canvas id="canvas" width="800" height="600"></canvas>
+        <canvas id="canvas" width="400" height="300"></canvas>
     </div>
     
     <div class="row">
