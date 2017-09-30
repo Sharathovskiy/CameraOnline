@@ -60,4 +60,5 @@ function hidePhoto(){
 function setImgValue(){
     var dataURL = canvas.toDataURL("image/png");
     document.getElementById('hidden_data').value = dataURL;
+    document.getElementById('download').href = dataURL;
 }

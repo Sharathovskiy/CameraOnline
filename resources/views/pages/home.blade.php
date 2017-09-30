@@ -18,7 +18,6 @@
     
     <div class="row text-center" style="margin-top: 10px">
         <button id="snap" onclick="snap();" class="btn btn-success">Take photo!</button>
-        <a href="{{route('showPhotos')}}" class="btn btn-primary">Show photos from DB</a>
     </div>
     
 </div>
@@ -38,10 +37,13 @@
         <form method="POST" action="{{route('uploadPhoto')}}" style="display:inline-block">
         {{ csrf_field() }}
             <input name="hidden_data" id="hidden_data" type="hidden">
+            @if(Auth::check())
             <input type="submit" class="btn btn-success" value="Send photo!"></input>
+            @endif
         </form>
         
-        <button id="cancel" class="btn btn-danger">Nope nope nope!</button>
+        <a href="#" id="download" class="btn btn-primary" download="My beautiful photo">Download</a>
+        <button id="cancel" class="btn btn-danger">I don't like it!</button>
     </div>
     
 </div>
