@@ -6,6 +6,12 @@
 
 @section('content')
 
+@if(isset($isUploaded) && $isUploaded == true)
+<div id="success-alert" class="alert alert-success">
+  <strong>Success!</strong> Your photo has been uploaded!
+</div>
+@endif
+
 <div id="before-picture">
 
     <div class="row text-center">
@@ -51,6 +57,11 @@
 @endsection
 
 @section('scripts')
+<script>
+    $("#success-alert").delay(4000).slideUp(200, function() {
+    $(this).alert('close');
+});
+</script>
 <script src="{{asset("js/webcam.js")}}"></script>
 <script src="{{asset("js/photoTaker.js")}}"></script>
 @endsection

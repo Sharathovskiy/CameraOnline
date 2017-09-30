@@ -8,6 +8,10 @@ $('#cancel').click(function(){
    hidePhoto();
 });
 
+
+/**
+ * Blinks after taking photo
+ */
 $('#snap').click(function(){
     var opacity = 0;
     

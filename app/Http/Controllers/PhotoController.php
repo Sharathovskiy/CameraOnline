@@ -20,7 +20,7 @@ class PhotoController extends Controller {
             throw new \Illuminate\Database\QueryException('The photo could not be saved.');
         };
         
-        return redirect()->back();
+        return view('pages.home', ['isUploaded' => true]);
     }
 
     /**
