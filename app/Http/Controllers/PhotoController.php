@@ -18,15 +18,15 @@ class PhotoController extends Controller {
         
         if(!$this->uploadPhotoToDb($preparedDataURL)){
             throw new \Illuminate\Database\QueryException('The photo could not be saved.');
-            
         };
+        
         return redirect()->back();
     }
 
     /**
      * Removes specific characters from data URL so it can be decoded and saved as a normal file.
-     * @param type $dataUrl - data URL from 
-     * @return type $dataURL
+     * @param type $dataUrl - image' src value
+     * @return type $dataUrl
      */
     private function getPreparedDataURL($dataUrl) {
         $dataUrl = str_replace(self::IMAGE_PREFFIX, '', $dataUrl);
@@ -50,22 +50,29 @@ class PhotoController extends Controller {
     }
 
     public function showAuthUserPhotos() {
-        $page = 1;
+        $pageNumber = 1;
         if(array_key_exists('page', $_GET)){
-            $page = $_GET['page'];
+            $pageNumber = $_GET['page'];
         };
 
         $photos = Photo::where('user_id', '=', Auth::id())->get();
         
         $rowsPerPage = 2;
         $itemsPerRow = 5;
-        $paginator =  new PaginationHelper($rowsPerPage, $itemsPerRow, $page, $photos);
+        $paginator =  new PaginationHelper($rowsPerPage, $itemsPerRow, $pageNumber, $photos);
         
-        return view('pages.photos', ['paginator' => $paginator, 'page' => $page]);
+        return view('pages.photos', ['paginator' => $paginator, 'page' => $pageNumber]);
     }
     
     public function showPhoto($photoId){
-        $photo = Photo::findOrFail($photoId);
+        $photos = Photo::where('user_id', '=', Auth::id())->get();
+
+        $photo = $photos->where('id', $photoId)->first();
+
+        if($photo == null){
+            throw new \Exception('Photo not found');
+        }
+
         return view('pages.photo', ['photo' => $photo]);
     }
     
