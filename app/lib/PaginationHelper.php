@@ -2,8 +2,6 @@
 
 namespace App\lib;
 
-use DB;
-
 class PaginationHelper {
 
     private $items,
@@ -13,6 +11,9 @@ class PaginationHelper {
             $rowsPerPage;
 
     public function __construct($rowsPerPage, $itemsPerRow, $pageNumber, $items) {
+        if(! $items instanceof \Illuminate\Database\Eloquent\Collection){
+            throw new \Exception('$items have to be a collection!');
+        }
         $this->items = $items;
         $this->itemsPerRow = $itemsPerRow;
         $this->totalRows = ceil($this->items->count() / $this->itemsPerRow);

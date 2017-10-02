@@ -1,28 +1,29 @@
-$(document).keyup(function(e){
-    if(e.keyCode === 13 || e.keyCode === 32 && !isPhotoDisplayed){
+$(document).keyup(function (e) {
+    if (e.keyCode === 13 || e.keyCode === 32 && !isPhotoDisplayed) {
         snap();
     }
 });
 
-$('#cancel').click(function(){
-   hidePhoto();
+$('#cancel').click(function () {
+    hidePhoto();
 });
 
 
 /**
  * Blinks after taking photo
  */
-$('#snap').click(function(){
+$('#snap').click(function () {
     var opacity = 0;
-    
-    function changeOpacity(){
+
+    function changeOpacity() {
         afterPicture.style.opacity = opacity;
-        
-        if(opacity < 1){
+
+        if (opacity < 1) {
             setTimeout(changeOpacity, 15);
         }
         opacity += 0.05;
     }
+
     changeOpacity();
 });
 
@@ -44,7 +45,7 @@ function snap() {
 /**
  * Stops the video and shows canvas with photo.
  */
-function displayPhoto(){
+function displayPhoto() {
     beforePicture.style.display = 'none';
     afterPicture.style.display = 'block';
     video.pause();
@@ -54,14 +55,14 @@ function displayPhoto(){
 /**
  * Plays the video and hides canvas with photo
  */
-function hidePhoto(){
+function hidePhoto() {
     afterPicture.style.display = 'none';
     beforePicture.style.display = 'block';
     video.play();
     isPhotoDisplayed = false;
 }
 
-function setImgValue(){
+function setImgValue() {
     var dataURL = canvas.toDataURL("image/png");
     document.getElementById('hidden_data').value = dataURL;
     document.getElementById('download').href = dataURL;
