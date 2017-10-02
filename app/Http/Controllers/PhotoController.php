@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\PageNotFoundException;
+use App\Exceptions\PhotoNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use App\Photo;
 use App\User;
@@ -76,7 +78,7 @@ class PhotoController extends Controller
         $photo = $photos->where('id', $photoId)->first();
 
         if ($photo == null) {
-            throw new \Exception('Photo not found');
+            throw new PhotoNotFoundException('Photo not found');
         }
 
         return view('pages.photo', ['photo' => $photo]);
@@ -84,8 +86,16 @@ class PhotoController extends Controller
 
     public function deletePhoto($photoId)
     {
-        $photo = Photo::findOrFail($photoId);
+        $photos = Photo::where('user_id', '=', Auth::id())->get();
+
+        $photo = $photos->where('id', $photoId)->first();
+
+        if ($photo == null) {
+            throw new PhotoNotFoundException('Photo not found');
+        }
+
         $photo->delete();
+
         return redirect()->back();
     }
 
