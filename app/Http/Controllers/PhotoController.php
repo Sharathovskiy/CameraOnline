@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\NotLoggedInException;
 use App\Exceptions\PageNotFoundException;
 use App\Exceptions\PhotoNotFoundException;
 use Illuminate\Support\Facades\Auth;
@@ -41,8 +42,8 @@ class PhotoController extends Controller
 
     private function uploadPhotoToDb($dataUrl)
     {
-        if (!Auth::check()) {
-            throw new \Exception("You need to login in order to add photos!");
+        if (Auth::guest()) {
+            throw new NotLoggedInException("You need to login in order to add photos!");
         }
         $photo = new Photo();
         $photo->name = time() . '.png';
@@ -57,6 +58,10 @@ class PhotoController extends Controller
 
     public function showAuthUserPhotos()
     {
+        if(Auth::guest()){
+            throw new NotLoggedInException("You need to login in order to see photos!");
+        }
+
         $pageNumber = 1;
         if (array_key_exists('page', $_GET)) {
             $pageNumber = $_GET['page'];
