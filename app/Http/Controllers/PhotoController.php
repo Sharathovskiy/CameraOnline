@@ -57,10 +57,32 @@ class PhotoController extends Controller
 
         $user = Auth::user();
 
+        if ($this->checkIfPhotoAlreadyExists($user, $photo->image)){
+            return false;
+        }
         $isUploaded = $user->photos()->save($photo);
 
         return $isUploaded;
     }
+
+    /**
+     * Compares dataUrl with each of user's photo and returns true if this photo already exists
+     *
+     * @param $user
+     * @param $dataUrl
+     * @return bool - indicates whether photo with given dataUrl already exists in user's photos.
+     */
+    private function checkIfPhotoAlreadyExists($user, $dataUrl)
+    {
+        $photos = $user->photos()->get();
+
+        foreach ($photos as $photo) {
+            if ($photo->image == $dataUrl)
+                return true;
+        }
+        return false;
+    }
+
 
     /**
      * Shows all of the users photos.
