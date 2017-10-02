@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\BadDataUrlException;
 use App\Exceptions\DatabaseException;
 use App\Exceptions\NotLoggedInException;
 use App\Exceptions\PhotoNotFoundException;
@@ -16,6 +17,11 @@ class PhotoController extends Controller
     public function uploadPhoto()
     {
         $dataURL = $_POST['hidden_data'];
+
+        if(!$this->validateDataUrl($dataURL)){
+            throw new BadDataUrlException('Data url is in wrong format!');
+        }
+
         $preparedDataURL = $this->getPreparedDataURL($dataURL);
 
         if (!$this->uploadPhotoToDb($preparedDataURL)) {
@@ -23,6 +29,14 @@ class PhotoController extends Controller
         };
 
         return view('pages.home', ['isUploaded' => true]);
+    }
+
+    private function validateDataUrl($dataUrl)
+    {
+        if (strpos($dataUrl, self::IMAGE_PREFFIX) === false) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -60,9 +74,9 @@ class PhotoController extends Controller
         if ($this->checkIfPhotoAlreadyExists($user, $photo->image)){
             return false;
         }
-        $isUploaded = $user->photos()->save($photo);
+        $uploadedPhoto = $user->photos()->save($photo);
 
-        return $isUploaded;
+        return isset($uploadedPhoto);
     }
 
     /**

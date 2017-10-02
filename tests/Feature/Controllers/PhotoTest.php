@@ -8,7 +8,7 @@
 
 namespace Tests\Feature\Controllers;
 
-use App\Exceptions\DatabaseException;
+use App\Http\Controllers\PhotoController;
 use App\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
@@ -31,7 +31,7 @@ class PhotoTest extends TestCase
         $user = User::find($photo->user_id);
 
         //act
-        $response = $this->actingAs($user)->call('GET', '/photo/' . $photo->id, ['photo' => $photo]);
+        $response = $this->actingAs($user)->call('GET', '/photo/1', ['photo' => $photo]);
 
         //assert
         $response->assertViewIs('pages.photo');
@@ -55,7 +55,7 @@ class PhotoTest extends TestCase
         //arrange
         $user = factory(\App\User::class)->create();
         $_POST = array(
-            'hidden_data' => 'dataUrl'
+            'hidden_data' => PhotoController::IMAGE_PREFFIX . 'dataUrl'
         );
         //act
         $response = $this->actingAs($user)->call('POST', '/photo/' );
@@ -65,18 +65,32 @@ class PhotoTest extends TestCase
         $response->assertViewHas(['isUploaded' => true]);
     }
 
+
+    public function testUploadWithInvalidDataUrl()
+    {
+        //arrange
+        $user = factory(\App\User::class)->create();
+        $_POST = array(
+            'hidden_data' => 'dataUrl'
+        );
+        //act
+        $response = $this->actingAs($user)->call('POST', '/photo/' );
+
+        //assert
+        $response->assertStatus(500);
+    }
+
     public function testForAddingDuplicatedPhoto()
     {
         //arrange
-        $dataUrl = 'dataUrl';
         $user = factory(\App\User::class)->create();
         $photo = factory(\App\Photo::class)->create([
-            'image' => $dataUrl,
+            'image' => 'dataUrl',
             'user_id' => $user->id
         ]);
 
         $_POST = array(
-            'hidden_data' => $dataUrl
+            'hidden_data' => PhotoController::IMAGE_PREFFIX . 'dataUrl'
         );
         //act
         $response = $this->actingAs($user)->call('POST', '/photo/' );
