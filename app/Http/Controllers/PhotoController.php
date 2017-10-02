@@ -18,7 +18,7 @@ class PhotoController extends Controller
     {
         $dataURL = $_POST['hidden_data'];
 
-        if(!$this->validateDataUrl($dataURL)){
+        if (!$this->validateDataUrl($dataURL)) {
             throw new BadDataUrlException('Data url is in wrong format!');
         }
 
@@ -71,7 +71,11 @@ class PhotoController extends Controller
 
         $user = Auth::user();
 
-        if ($this->checkIfPhotoAlreadyExists($user, $photo->image)){
+        if ($this->checkIfPhotoAlreadyExists($user, $photo->image)) {
+            return false;
+        }
+
+        if (!$this->checkUsersMaxPhotosCount($user)) {
             return false;
         }
         $uploadedPhoto = $user->photos()->save($photo);
@@ -88,11 +92,20 @@ class PhotoController extends Controller
      */
     private function checkIfPhotoAlreadyExists($user, $dataUrl)
     {
-        $photos = $user->photos()->get();
+        $photos = $this->getUsersPhotos($user);
 
         foreach ($photos as $photo) {
             if ($photo->image == $dataUrl)
                 return true;
+        }
+        return false;
+    }
+
+    private function checkUsersMaxPhotosCount($user)
+    {
+        $photosCount = $this->getUsersPhotos($user)->count();
+        if ($photosCount < $user->max_photos_count) {
+            return true;
         }
         return false;
     }
@@ -114,7 +127,7 @@ class PhotoController extends Controller
             $pageNumber = $_GET['page'];
         };
 
-        $photos = Photo::where('user_id', '=', Auth::id())->get();
+        $photos = $this->getUsersPhotos(Auth::user());
 
         $rowsPerPage = 2;
         $itemsPerRow = 5;
@@ -134,7 +147,7 @@ class PhotoController extends Controller
      */
     public function showPhoto($photoId)
     {
-        $photos = Photo::where('user_id', '=', Auth::id())->get();
+        $photos = $this->getUsersPhotos(Auth::user());
 
         $photo = $photos->get($photoId - 1);
 
@@ -150,7 +163,7 @@ class PhotoController extends Controller
      */
     public function deletePhoto($photoId)
     {
-        $photos = Photo::where('user_id', '=', Auth::id())->get();
+        $photos = $this->getUsersPhotos(Auth::user());
 
         $photo = $photos->where('id', $photoId)->first();
 
@@ -161,6 +174,11 @@ class PhotoController extends Controller
         $photo->delete();
 
         return redirect()->back();
+    }
+
+    private function getUsersPhotos($user)
+    {
+        return $user->photos;
     }
 
     /**

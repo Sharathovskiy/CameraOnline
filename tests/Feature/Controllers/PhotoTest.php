@@ -98,4 +98,16 @@ class PhotoTest extends TestCase
         //assert
         $response->assertStatus(500);
     }
+
+    public function testForAddingAboveMaxPhotosCount()
+    {
+        $user = factory(\App\User::class)->create();
+        factory(\App\Photo::class, $user->max_photos_count)->create();
+
+        //act
+        $response = $this->actingAs($user)->call('POST', '/photo/' );
+
+        //assert
+        $response->assertStatus(500);
+    }
 }
