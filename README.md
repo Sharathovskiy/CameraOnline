@@ -1,4 +1,12 @@
 # CameraOnline
 
-Currently I want this application to take snapshots online. I'm doing some research and testing for my diploma work.
-Laravel is used.
+This application takes photos online. 
+Project is created using Laravel.
+
+
+# What does it do:
+
+Guest may only take photo, and download it.
+
+Logged in user may snap photo and send it to database,  after that user may see his/her photos.
+It is also possible for user to delete / download photo.
