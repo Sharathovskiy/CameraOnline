@@ -8,6 +8,7 @@
 
 namespace Tests\Feature\Controllers;
 
+use App\Exceptions\DatabaseException;
 use App\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
@@ -62,5 +63,25 @@ class PhotoTest extends TestCase
         //assert
         $response->assertViewIs('pages.home');
         $response->assertViewHas(['isUploaded' => true]);
+    }
+
+    public function testForAddingDuplicatedPhoto()
+    {
+        //arrange
+        $dataUrl = 'dataUrl';
+        $user = factory(\App\User::class)->create();
+        $photo = factory(\App\Photo::class)->create([
+            'image' => $dataUrl,
+            'user_id' => $user->id
+        ]);
+
+        $_POST = array(
+            'hidden_data' => $dataUrl
+        );
+        //act
+        $response = $this->actingAs($user)->call('POST', '/photo/' );
+
+        //assert
+        $response->assertStatus(500);
     }
 }
