@@ -8,7 +8,7 @@ Route::get('/home', function () {
     return view('pages.home');
 })->name('home');
 
-Route::get('show-photos', 'PhotoController@showAuthUserPhotos')->name('showPhotos')->middleware('auth');
+Route::get('show-photos', 'PhotoController@showUserPhotos')->name('showPhotos')->middleware('auth');
 
 Route::group(['prefix' => 'photo', 'middleware' => 'auth'], function () {
     Route::post('/', 'PhotoController@uploadPhoto')->name('uploadPhoto');

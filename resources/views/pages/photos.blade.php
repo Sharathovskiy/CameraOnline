@@ -8,11 +8,11 @@
             <table>
                 @foreach($paginator->getNextPage() as $row)
                     <tr style="margin-bottom: 100px; text-align: center;">
-                        @foreach($row as $photo)
+                        @foreach($row as $idx => $photo)
                             <td style="border-bottom: 1px solid #ddd; padding: 10px">
                                 <?php $imageSrc = 'data:image/png;base64,' . $photo->image?>
-                                <h4>{{$photo->id}}</h4>
-                                <a href="{{route('showPhoto', $photo->id)}}" target="new">
+                                <h4>{{$idx+1}}</h4>
+                                <a href="{{route('showPhoto', $idx+1)}}" target="new">
                                     <image width="200" height="150" src="<?= $imageSrc ?>"/>
                                 </a>
                                 <div style="margin-top: 10px">

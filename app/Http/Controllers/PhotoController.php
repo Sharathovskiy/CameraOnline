@@ -2,18 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\DatabaseException;
 use App\Exceptions\NotLoggedInException;
-use App\Exceptions\PageNotFoundException;
 use App\Exceptions\PhotoNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use App\Photo;
-use App\User;
 use App\lib\PaginationHelper;
-use DB;
 
 class PhotoController extends Controller
 {
-
     const IMAGE_PREFFIX = 'data:image/png;base64,';
 
     public function uploadPhoto()
@@ -22,7 +19,7 @@ class PhotoController extends Controller
         $preparedDataURL = $this->getPreparedDataURL($dataURL);
 
         if (!$this->uploadPhotoToDb($preparedDataURL)) {
-            throw new \Illuminate\Database\QueryException('The photo could not be saved.');
+            throw new DatabaseException('The photo could not be saved.');
         };
 
         return view('pages.home', ['isUploaded' => true]);
@@ -30,6 +27,7 @@ class PhotoController extends Controller
 
     /**
      * Removes specific characters from data URL so it can be decoded and saved as a normal file.
+     *
      * @param type $dataUrl - image' src value
      * @return type $dataUrl
      */
@@ -40,6 +38,14 @@ class PhotoController extends Controller
         return $dataUrl;
     }
 
+
+    /**
+     * Uploads photo to database.
+     *
+     * @param $dataUrl - image' src value
+     * @return mixed bool - indicates whether photo is uploaded.
+     * @throws NotLoggedInException
+     */
     private function uploadPhotoToDb($dataUrl)
     {
         if (Auth::guest()) {
@@ -56,12 +62,17 @@ class PhotoController extends Controller
         return $isUploaded;
     }
 
-    public function showAuthUserPhotos()
+    /**
+     * Shows all of the users photos.
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws NotLoggedInException
+     */
+    public function showUserPhotos()
     {
-        if(Auth::guest()){
+        if (Auth::guest()) {
             throw new NotLoggedInException("You need to login in order to see photos!");
         }
-
         $pageNumber = 1;
         if (array_key_exists('page', $_GET)) {
             $pageNumber = $_GET['page'];
@@ -76,11 +87,20 @@ class PhotoController extends Controller
         return view('pages.photos', ['paginator' => $paginator, 'page' => $pageNumber]);
     }
 
+    /**
+     * Shows the photo with given ID, each user has it's separate group of ID's
+     * For example: user XYZ has 3 photos, to his first photo we may access
+     * by link /photo/1, to second through /photo/2 etc.
+     *
+     * @param $photoId
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws PhotoNotFoundException
+     */
     public function showPhoto($photoId)
     {
         $photos = Photo::where('user_id', '=', Auth::id())->get();
 
-        $photo = $photos->where('id', $photoId)->first();
+        $photo = $photos->get($photoId - 1);
 
         if ($photo == null) {
             throw new PhotoNotFoundException('Photo not found');
@@ -89,6 +109,9 @@ class PhotoController extends Controller
         return view('pages.photo', ['photo' => $photo]);
     }
 
+    /**
+     * Deletes the photo with given ID.
+     */
     public function deletePhoto($photoId)
     {
         $photos = Photo::where('user_id', '=', Auth::id())->get();
@@ -106,6 +129,7 @@ class PhotoController extends Controller
 
     /**
      * Decodes and uploads photo to servers directory
+     *
      * @param type $preparedDataURL
      */
     private function uploadPhotoToTheServer($preparedDataURL)
