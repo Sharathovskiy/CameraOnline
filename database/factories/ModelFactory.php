@@ -26,6 +26,9 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
 $factory->define(App\Photo::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->name,
+        'user_id' => function() {
+            return factory(\App\User::class)->create()->id;
+        },
         'image' => $faker->imageUrl(),
     ];
 });
